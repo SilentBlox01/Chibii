@@ -21,6 +21,7 @@ qrcode = "^7.4.2"
 lyricsgenius = "^3.0.1"
 sympy = "^1.11.1"
 discord-py-slash-command = "4.2.1"
+chatterbot-voice = "^0.1.5"
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"

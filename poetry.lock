@@ -130,6 +130,42 @@ python-versions = ">=3.6.0"
 unicode_backport = ["unicodedata2"]
 
 [[package]]
+name = "chatterbot"
+version = "0.6.3"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+chatterbot-corpus = ">=0.0.1,<1.0.0"
+jsondatabase = ">=0.1.7,<1.0.0"
+nltk = ">=3.2.0,<4.0.0"
+pymongo = ">=3.3.0,<4.0.0"
+python-twitter = ">=3.0.0,<4.0.0"
+SQLAlchemy = ">=1.1,<1.2"
+
+[[package]]
+name = "chatterbot-corpus"
+version = "0.0.2"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "chatterbot-voice"
+version = "0.1.5"
+description = "A voice interface adapter for ChatterBot."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+ChatterBot = ">=0.3.5,<0.7.0"
+SpeechRecognition = ">=3.3.3"
+
+[[package]]
 name = "click"
 version = "8.1.3"
 description = "Composable command line interface toolkit"
@@ -254,6 +290,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "future"
+version = "0.18.3"
+description = "Clean single-source support for Python 3 and 2"
+category = "main"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -327,6 +371,17 @@ description = "Lightweight pipelining with Python functions"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "jsondatabase"
+version = "0.1.7"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pymongo = "*"
 
 [[package]]
 name = "lyricsgenius"
@@ -404,6 +459,19 @@ description = "Fundamental package for array computing in Python"
 category = "main"
 optional = false
 python-versions = ">=3.8"
+
+[[package]]
+name = "oauthlib"
+version = "3.2.2"
+description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+rsa = ["cryptography (>=3.0.0)"]
+signals = ["blinker (>=1.4.0)"]
+signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
 
 [[package]]
 name = "openai"
@@ -518,6 +586,24 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "pymongo"
+version = "3.13.0"
+description = "Python driver for MongoDB <http://www.mongodb.org>"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+aws = ["pymongo-auth-aws (<2.0.0)"]
+encryption = ["pymongocrypt (>=1.1.0,<2.0.0)"]
+gssapi = ["pykerberos"]
+ocsp = ["pyopenssl (>=17.2.0)", "requests (<3.0.0)", "service-identity (>=18.1.0)", "certifi"]
+snappy = ["python-snappy"]
+srv = ["dnspython (>=1.16.0,<1.17.0)"]
+tls = ["ipaddress"]
+zstd = ["zstandard"]
+
+[[package]]
 name = "pypng"
 version = "0.20220715.0"
 description = "Pure Python library for saving and loading PNG images"
@@ -555,6 +641,19 @@ ujson = ">=3.0.0"
 
 [package.extras]
 test = ["coverage", "pytest-cov", "pytest", "pyflakes", "pycodestyle", "pylint"]
+
+[[package]]
+name = "python-twitter"
+version = "3.5"
+description = "A Python wrapper around the Twitter API"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+future = "*"
+requests = "*"
+requests-oauthlib = "*"
 
 [[package]]
 name = "pytoolconfig"
@@ -672,6 +771,21 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "requests-oauthlib"
+version = "1.3.1"
+description = "OAuthlib authentication support for Requests."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+oauthlib = ">=3.0.0"
+requests = ">=2.0.0"
+
+[package.extras]
+rsa = ["oauthlib[signedtoken] (>=3.0.0)"]
+
+[[package]]
 name = "rope"
 version = "1.7.0"
 description = "a python refactoring library..."
@@ -701,6 +815,38 @@ description = "A modern CSS selector implementation for Beautiful Soup."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "speechrecognition"
+version = "3.10.0"
+description = "Library for performing speech recognition, with support for several engines and APIs, online and offline."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+requests = ">=2.26.0"
+
+[package.extras]
+whisper-api = ["openai"]
+
+[[package]]
+name = "sqlalchemy"
+version = "1.1.18"
+description = "Database Abstraction Library"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+mssql_pymssql = ["pymssql"]
+mssql_pyodbc = ["pyodbc"]
+mysql = ["mysqlclient"]
+oracle = ["cx-oracle"]
+postgresql = ["psycopg2"]
+postgresql_pg8000 = ["pg8000"]
+postgresql_psycopg2cffi = ["psycopg2cffi"]
+pymysql = ["pymysql"]
 
 [[package]]
 name = "sympy"
@@ -820,7 +966,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "4813a5cf5a7f19ef4c772a2f8340db9f927304dd94f94102b20d3fdcc1bbe6a4"
+content-hash = "2c3a3d427df7077923433332ede3460e79747e201a9a746901425a957c4266f1"
 
 [metadata.files]
 aiohttp = []
@@ -833,6 +979,9 @@ beautifulsoup4 = []
 certifi = []
 cffi = []
 charset-normalizer = []
+chatterbot = []
+chatterbot-corpus = []
+chatterbot-voice = []
 click = []
 colorama = []
 cryptography = []
@@ -843,6 +992,7 @@ discord-py-slash-command = []
 "discord.py" = []
 flask = []
 frozenlist = []
+future = []
 idna = []
 iso8601 = []
 itsdangerous = []
@@ -850,12 +1000,14 @@ jedi = []
 jikanpy = []
 jinja2 = []
 joblib = []
+jsondatabase = []
 lyricsgenius = []
 markupsafe = []
 mpmath = []
 multidict = []
 nltk = []
 numpy = []
+oauthlib = []
 openai = []
 packaging = []
 parso = []
@@ -866,18 +1018,23 @@ protobuf = []
 pycparser = []
 pycryptodomex = []
 pyflakes = []
+pymongo = []
 pypng = []
 pyseto = []
 python-lsp-jsonrpc = []
+python-twitter = []
 pytoolconfig = []
 qrcode = []
 regex = []
 replit = []
 replit-python-lsp-server = []
 requests = []
+requests-oauthlib = []
 rope = []
 simplejson = []
 soupsieve = []
+speechrecognition = []
+sqlalchemy = []
 sympy = []
 toml = []
 tomli = []

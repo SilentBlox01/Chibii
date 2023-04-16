@@ -28,6 +28,11 @@ bot = commands.Bot(command_prefix="m/", intents=discord.Intents.all())
 @bot.event
 async def on_ready():
     print("Miku is online")
+
+@bot.event
+async def on_ready():
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game("Minecraft"))
+    print("Hikari")
 	
 @bot.command()
 async def hello(ctx):
@@ -49,7 +54,7 @@ async def kick(ctx, member:discord.Member, reason="Sin razón establecida."):
 @bot.command()
 @commands.has_permissions(manage_messages=True)
 async def say(ctx, *, message):
-    await ctx.message.delete()
+    await ctx.message.delete(delay=0.05)  # Elimina el mensaje original más rápido
     await ctx.send(message)
 
 @bot.command()
@@ -261,139 +266,194 @@ async def blacklistremove(ctx, user_id: int):
     else:
         await ctx.send(f"{user_id} no está en la lista negra.")
 
-@bot.command(pass_context=True)
+@bot.command()
 async def kiss(ctx, member: discord.Member):
-    if member == ctx.message.author:
-        return await ctx.send("¡No puedes besarte a ti mismo!")
     if member == bot.user:
-        return await ctx.send("Hmmm no, no gracias.")
-    
-    kisses = ['https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjM3ZjI3NzBmOGFhMTM5YmM1ZDYwYWE5MDVmZDk2YTM0NjE5ODMwNSZjdD1n/zkppEMFvRX5FC/giphy.gif',
-              'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDU4Njc4NjRjNjdhZDE1OTM2YzJlMzE4NzkzNDRjYmM0ZTBhMWQzYiZjdD1n/MQVpBqASxSlFu/giphy.gif',
-							'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYThlYTZmMzQzMzUyOTJlNDU5OTZmNjljNjQxYjUwNGM2NzYwNTA1MyZjdD1n/vaSA1fpCkY06I/giphy.gif',
-							'https://media.giphy.com/media/XZYxeRlIEdmKI/giphy.gif',
-							'https://media.giphy.com/media/12VXIxKaIEarL2/giphy.gif',
-							'https://media.giphy.com/media/11rWoZNpAKw8w/giphy.gif',
-							'https://media.giphy.com/media/G3va31oEEnIkM/giphy.gif',
-							'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODhhYTlhMjhiMDE3ZjgzZDBmNzZmNTllNmUxZGIwZTU3YjNkMDA3MCZjdD1n/hnNyVPIXgLdle/giphy.gif',
-							'https://media.giphy.com/media/FqBTvSNjNzeZG/giphy.gif']
-    k = discord.Embed(description=f"¡{member.mention} recibió un beso de {ctx.message.author.mention}!", color=0xff69b4)
-    k.set_image(url=random.choice(kisses))
-    await ctx.send(embed=k)
+        await ctx.send("Hmmm no, no gracias.")
+        return
+
+    if member == ctx.author:
+        await ctx.send("¿Por qué te quieres besar a ti mismo?")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/kiss")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} besó a {member.name}! 7w7", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def pat(ctx, member: discord.Member):
-    if member == ctx.message.author:
-        return await ctx.send("¡No puedes acariciarte a ti mismo!")
-    if member == bot.user:
-        return await ctx.send("Te lo agradezco, pero no tengo cuerpo para sentirlo")
-    
-    pats = ['https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDJiMTg0OTAxMDljYTA5ZTA0YjM1ZTJkYTgxZWVjYTJmZGEzNmRlNyZjdD1n/zIbMVLlZlYY2iX62kZ/giphy.gif',
-            'https://media.giphy.com/media/osYdfUptPqV0s/giphy.gif',
-            'https://media.giphy.com/media/5tmRHwTlHAA9WkVxTU/giphy.gif',
-            'https://media.giphy.com/media/ye7OTQgwmVuVy/giphy.gif',
-						'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTM4ODMxN2FhOWYzZTg4MzdlYjJmMGFhOTI0OWEzNWJhMjliYTM5MiZjdD1n/7weOpkiSaVOCmABmoK/giphy.gif',
-						'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDdhMmExN2MyMjk4ZTNlYWM0MTJjM2U3M2M4NTA0ZmExZjNmMjk0MCZjdD1n/jNKYleiHDwypEPkymR/giphy.gif']
-    
-    pat = discord.Embed(description=f"¡{member.mention} recibió una caricia de {ctx.message.author.mention}!", color=0xff69b4)
-    pat.set_image(url=random.choice(pats))
-    await ctx.send(embed=pat)
+    """Acaricia a un usuario con un gif de waifu.pics"""
+    if member == ctx.author:
+        return await ctx.send("¡Ara ara! ¿Qué intentabas hacer?")
+
+    response = requests.get("https://api.waifu.pics/sfw/pat")
+    data = response.json()
+    img_url = data['url']
+
+    embed = discord.Embed(title=f"{ctx.author.name} acarició a {member.name} :3", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+
+    if member == ctx.me:
+        return await ctx.send(embed=embed, content=f"Gracias por acariciarme, {ctx.author.name} 😍")
+    else:
+        return await ctx.send(embed=embed)
 
 @bot.command()
 async def cry(ctx):
-    cries = ['https://media.giphy.com/media/59d1zo8SUSaUU/giphy.gif',
-             'https://media.giphy.com/media/Ui7MfO6OaLz4k/giphy.gif',
-             'https://media.giphy.com/media/ShPv5tt0EM396/giphy.gif',
-             'https://media.giphy.com/media/8YutMatqkTfSE/giphy.gif',
-             'https://media.giphy.com/media/5t4gifYFrcwAcxt6t3/giphy.gif',
-             'https://media.giphy.com/media/zHGXhFJCVCbD2/giphy.gif',
-             'https://media.giphy.com/media/gMzPyvdzoDikU/giphy.gif',
-             'https://media.giphy.com/media/AI7yqKC5Ov0B2/giphy.gif']
-
-    cry = discord.Embed(description=f"{ctx.author.mention} está llorando 😢.", color=0xff69b4)
-    cry.set_image(url=random.choice(cries))
-    await ctx.send(embed=cry)
+    response = requests.get("https://api.waifu.pics/sfw/cry")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title="¡No llores más!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    
+    if ctx.author == bot.user:
+        await ctx.send(f"¡Gracias por consolarme, {ctx.author.mention}! Lo aprecio mucho :3")
+    else:
+        await ctx.send(embed=embed)
 
 @bot.command()
-async def hi(ctx, user: discord.Member = None):
-    hi_gifs = ['https://media.giphy.com/media/AFdcYElkoNAUE/giphy.gif',
-             'https://media.giphy.com/media/DHiqBbtjaB30s/giphy.gif',
-             'https://media.giphy.com/media/yyVph7ANKftIs/giphy.gif',
-             'https://media.giphy.com/media/AmVFCGRpBsY24/giphy.gif',
-             'https://media.giphy.com/media/AsKhf57LTqQ9QvqKxC/giphy.gif',
-             'https://media.giphy.com/media/n3wMtdOm17LwYh7Eac/giphy.gif',
-             'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTU4OTAyZDVjNmU2NGIzNWQ1NzMzZDliMzMzODYwNTE5YTNhNmVkNCZjdD1n/OiPr3CaEoC2AKzKyfg/giphy.gif',
-             'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWViYjliZDdlM2Q0ODdiZjUxMjMyOGNlYjRiMTFhOGMxZTA3MTliYyZjdD1n/FS2JF2NOyN9fJRS1wk/giphy.gif']
-
-    if user is None:
-        hi = discord.Embed(description=f"{ctx.author.mention} está saludando 👋.", color=discord.Color.blue())
-        hi.set_image(url=random.choice(hi_gifs))
-        await ctx.send(embed=hi)
+async def hi(ctx, member: discord.Member):
+    if member.id == bot.user.id:
+        response = requests.get("https://api.waifu.pics/sfw/wave")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(title=f"Hola {ctx.author.name}!", description="¡Gracias por saludarme!", color=discord.Color.blue())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
     else:
-        hi = discord.Embed(description=f"{ctx.author.mention} está saludando a {user.mention} 👋.", color=discord.Color.blue())
-        hi.set_image(url=random.choice(hi_gifs))
-        await ctx.send(embed=hi)
+        response = requests.get("https://api.waifu.pics/sfw/wave")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(title=f"{ctx.author.name} saluda a {member.display_name}!", color=discord.Color.blue())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
 
 @bot.command()
 async def hug(ctx, member: discord.Member):
-    if member == ctx.message.author:
-        return await ctx.send("¡No puedes abrazarte a ti mismo!")
     if member == bot.user:
-        return await ctx.send("Gracias por tu amable gesto, pero no tengo cuerpo para recibir abrazos :3")
-    
-    hugs = ['https://media.giphy.com/media/lrr9rHuoJOE0w/giphy.gif',
-            'https://media.giphy.com/media/IRUb7GTCaPU8E/giphy.gif',
-            'https://media.giphy.com/media/qscdhWs5o3yb6/giphy.gif',
-            'https://media.giphy.com/media/GMFUrC8E8aWoo/giphy.gif',
-            'https://media.giphy.com/media/JLovyTOWK4cuc/giphy.gif',
-						'https://media.giphy.com/media/LIqFOpO9Qh0uA/giphy.gif',
-						'https://media.giphy.com/media/5eyhBKLvYhafu/giphy.gif']
-    
-    hug = discord.Embed(description=f"¡{member.mention} recibió un abrazo de {ctx.message.author.mention}!", color=0xff69b4)
-    hug.set_image(url=random.choice(hugs))
-    await ctx.send(embed=hug)
+        response = requests.get("https://api.waifu.pics/sfw/hug")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(description=f"¡Te abrazo {ctx.author.name}!", color=discord.Color.purple())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
+    else:
+        response = requests.get("https://api.waifu.pics/sfw/hug")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(description=f"¡{ctx.author.name} abraza a {member.name}!", color=discord.Color.purple())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
+
+@bot.command()
+async def smile(ctx, member: discord.Member = None):
+    if member is None:
+        response = requests.get("https://api.waifu.pics/sfw/smile")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(title="¡Sonríe!", color=discord.Color.blue())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
+    else:
+        response = requests.get("https://api.waifu.pics/sfw/smile")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(title=f"{ctx.author.name} está sonriendo gracias a {member.display_name}!", color=discord.Color.blue())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
 
 @bot.command()
 async def slap(ctx, member: discord.Member):
-    if member == ctx.message.author:
-        return await ctx.send("No seas estupido, ¿Para qué quieres abofetearte a ti mismo? T-T")
     if member == bot.user:
-        return await ctx.send("E-e-en serio ¿quieres abofetearme? No, no puedo creerlo. ¿Por qué querrías hacer algo así? Yo... yo no he hecho nada malo, ¿verdad? Oh, por favor, no lo hagas.")
-    
-    slaps = ['https://media.giphy.com/media/tX29X2Dx3sAXS/giphy.gif',
-             'https://media.giphy.com/media/k1uYB5LvlBZqU/giphy.gif',
-             'https://media.giphy.com/media/9U5J7JpaYBr68/giphy.gif',
-             'https://media.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif',
-             'https://media.giphy.com/media/6Fad0loHc6Cbe/giphy.gif',
-						 'https://media.giphy.com/media/xUNd9HZq1itMkiK652/giphy.gif']
-    
-    slap = discord.Embed(description=f"¡{member.mention} fue abofeteado por {ctx.message.author.mention}!", color=0xff69b4)
-    slap.set_image(url=random.choice(slaps))
-    await ctx.send(embed=slap)
+        await ctx.send("¡Kyaa~! ¿Por qué querrías golpearme así? ¡No entiendo! ¿Acaso he hecho algo malo? ¡Por favor, no me hagas daño!")
+        return
+
+    if member == ctx.author:
+        await ctx.send("¿Por qué te quieres pegar a ti mismo?")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/slap")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} le dio una bofetada a {member.name} ¡Ouch!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
 
 @bot.command()
-async def knockout(ctx, member: discord.Member):
-    if member == ctx.message.author:
-        return await ctx.send("¿Necesitas ayuda?")
+async def bonk(ctx, member: discord.Member):
     if member == bot.user:
-        return await ctx.send("E-eh... ¿en verdad quieres noquearme? No estoy segura de que sea una buena idea, ¿sabes? Es decir, no creo que sea necesario llegar a ese extremo. No quiero meterme en problemas contigo, pero no me siento cómoda con esta situación. ¿Podríamos resolver esto de otra manera?")
-    
-    knockouts = ['https://media.giphy.com/media/kqvXSKcCgI8BLdkPUp/giphy.gif',
-                 'https://media.giphy.com/media/4oPI0FmV4e34XWeUq9/giphy.gif',
-                 'https://media.giphy.com/media/jbhLppNiWrTXRrjgCh/giphy.gif',
-                 'https://media.giphy.com/media/Ctb7y7oLeZpUsZwlhG/giphy.gif',
-                 'https://media.giphy.com/media/TnzPcwFLl1ztXX2UfD/giphy.gif',
-								 'https://media.giphy.com/media/pdSDauIEkPscuipQbP/giphy.gif',
-								 'https://media.giphy.com/media/sC1PWN9DV0QXKJCalZ/giphy.gif']
-    
-    knockout = discord.Embed(description=f"¡{member.mention} ha sido noqueado por {ctx.message.author.mention}!", color=0xff0000)
-    knockout.set_image(url=random.choice(knockouts))
-    await ctx.send(embed=knockout)
+        await ctx.send("¡Kyaa~! ¿Por qué querrías golpearme así? ¡No entiendo! ¿Acaso he hecho algo malo? ¡Por favor, no me hagas daño!")
+        return
+
+    if member == ctx.author:
+        await ctx.send("¿Por qué quieres golpearte a ti mismo? ¡Eso no es saludable!")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/bonk")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} golpea a {member.name} con un mazo. ¡Ouch!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def smug(ctx, member: discord.Member = None):
+    if member is None:
+        response = requests.get("https://api.waifu.pics/sfw/smug")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(title="¡Mira esa sonrisa de autosuficiencia!", color=discord.Color.blue())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
+    else:
+        response = requests.get("https://api.waifu.pics/sfw/smug")
+        data = response.json()
+        img_url = data['url']
+        embed = discord.Embed(title=f"{ctx.author.name} está sonriendo con autosuficiencia gracias a {member.display_name}!", color=discord.Color.blue())
+        embed.set_image(url=img_url)
+        await ctx.send(embed=embed)
+
+@bot.command()
+async def kill(ctx, member: discord.Member):
+    if member == bot.user:
+        await ctx.send("Hmph, ¿por qué habría de importarme si quieres matarme o no? No es más que una amenaza vacía proveniente de un ser débil y patético. Si realmente quisieras matarme, deberías saber que no será fácil. Yo soy más fuerte de lo que jamás serás. Pero, por supuesto, eres libre de intentarlo. No tengo nada que perder.")
+        return
+
+    if member == ctx.author:
+        await ctx.send("¿Por qué te quieres matar a ti mismo? Me resulta difícil entender por qué alguien querría tomar su propia vida. ¿Es la tristeza lo que te consume? ¿La soledad te ahoga? No lo sé, pero lo que sí sé es que no eres la única persona que ha sentido así. Aunque parezca que todo está perdido, siempre hay una luz al final del túnel. Quizás solo necesites un poco de ayuda para verla. No te rindas, sigue adelante y recuerda que siempre hay una oportunidad para encontrar la felicidad.")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/kill")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} mató a {member.name} 😱", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def bite(ctx, member: discord.Member):
+    if member == bot.user:
+        await ctx.send("Hmph. No puedo entender por qué alguien como tú querría morderme. ¿Es acaso por mi apariencia o por algún deseo sádico que quieras satisfacer?")
+        return
+
+    if member == ctx.author:
+        await ctx.send("Hmph, ¿por qué debería importarme si quieres morderte a ti mismo? No es como si eso tuviera algún impacto en mi vida. Además, ¿por qué alguien querría hacer algo tan absurdo? A veces no entiendo a la gente. En fin, haz lo que quieras, no es mi problema.")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/bite")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} mordió a {member.name}! >w<", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def punch(ctx, member: discord.Member):
     if member == ctx.message.author:
-        return await ctx.send("¡No puedes golpearte a ti mismo!")
+        return await ctx.send("No entiendo por qué tienes esa necesidad de golpearte a ti mismo.")
     if member == bot.user:
         return await ctx.send("¡No me golpees! ¡Solo soy un bot!")
     
@@ -416,28 +476,73 @@ async def punch(ctx, member: discord.Member):
 
 @bot.command()
 async def patear(ctx, member: discord.Member):
-    if member == ctx.message.author:
-        return await ctx.send("Hay Dios T-T")
+    """Patea a un usuario"""
+
+    if member == ctx.author:
+        return await ctx.send("No te puedes patear a ti mismo, ¡qué malo eres contigo!")
+
     if member == bot.user:
-        return await ctx.send("E-e-en s-serio... ¿q-quieres p-patearme? No entiendo por qué, ¿qué he hecho mal? ¿A-algo te ha molestado? Lo siento si te he ofendido, por favor, no me hagas daño.")
-    
-    kicks = ['https://media.giphy.com/media/qrXbqxGJq91ceNXOfM/giphy.gif',
-             'https://media.giphy.com/media/40hu2eMWSLmBqS00nz/giphy.gif',
-             'https://media.giphy.com/media/Pq9wegdS2sE8cfDQIZ/giphy.gif',
-             'https://media.giphy.com/media/zczRdwNV7g2s3uxVfJ/giphy.gif',
-             'https://media.giphy.com/media/OE98XY0o0VwpaMQFqg/giphy.gif',
-             'https://media.giphy.com/media/PIMCexKGD4gIB4ORZL/giphy.gif',
-             'https://media.giphy.com/media/pefBhma2UqwPVOg1Hs/giphy.gif',
-             'https://media.giphy.com/media/WJwkaHaEb7ml4jRAgT/giphy.gif',
-             'https://media.giphy.com/media/wOly8pa4s4W88/giphy.gif',
-             'https://media.giphy.com/media/cb4Pg4jau2SEE/giphy.gif',
-             'https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif',
-             'https://media.giphy.com/media/tZ7UQF5qKaFiJrRmX3/giphy.gif',
-						 'https://media.giphy.com/media/RHRSIak4wow3v4Rwcj/giphy.gif']
-    
-    kick = discord.Embed(description=f"¡{member.mention} recibió una patada de {ctx.message.author.mention}!", color=0xff69b4)
-    kick.set_image(url=random.choice(kicks))
-    await ctx.send(embed=kick)
+        return await ctx.send("No me puedes patear a mí, ¡yo soy invencible!")
+
+    response = requests.get("https://api.waifu.pics/sfw/kick")
+    data = response.json()
+    img_url = data['url']
+
+    embed = discord.Embed(title=f"{ctx.author.display_name} patea a {member.display_name}!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def lick(ctx, member: discord.Member):
+    if member == bot.user:
+        await ctx.send("No entiendo por qué tienes el descaro de querer lamerme, ¿acaso crees que soy algún objeto que puedes usar a tu antojo?")
+        return
+
+    if member == ctx.author:
+        await ctx.send("ಠ_ಠ")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/lick")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} lamió a {member.name}! 👅", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def handhold(ctx, member: discord.Member):
+    if member == bot.user:
+        await ctx.send("Hmph, ¿qué es lo que intentas? ¿Acaso pretendes ganarte mi confianza con gestos tan superficiales? No tienes idea de lo que realmente me pasa por dentro.")
+        return
+
+    if member == ctx.author:
+        await ctx.send(":,(")
+        return
+
+    response = requests.get("https://api.waifu.pics/sfw/handhold")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} sostiene las manos de {member.name}! ❤️", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def dance(ctx):
+    response = requests.get("https://api.waifu.pics/sfw/dance")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} está bailando... 🎶", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def happy(ctx):
+    response = requests.get("https://api.waifu.pics/sfw/happy")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} se siente feliz! 😄", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def creador(ctx):
@@ -450,6 +555,30 @@ async def creador(ctx):
     embed.add_field(name="Redes sociales:", value="Puedes encontrarme en [Twitter](https://twitter.com/S_Kitty05) y [YouTube](https://www.youtube.com/channel/UCCawTLnpgbc7_ltyGScoQpw).", inline=False)
     embed.set_footer(text="Estatus del bot: Aún en desarrollo, por lo que se pueden encontrar errores.")
     await ctx.send(embed=embed)
+
+@bot.command()
+async def guess(ctx):
+    """Inicia el juego de adivinanza"""
+    num = random.randint(1, 10)
+    await ctx.send("¡Bienvenido al juego de adivinanza! Estoy pensando en un número del 1 al 10. ¿Puedes adivinarlo?")
+
+    def check(message):
+        return message.author == ctx.author and message.channel == ctx.channel and message.content.isdigit()
+
+    for i in range(5):
+        try:
+            guess = int((await bot.wait_for('message', check=check, timeout=30)).content)
+        except:
+            await ctx.send("El tiempo se agotó. ¡Buena suerte la próxima vez!")
+            return
+        if guess == num:
+            await ctx.send(f"¡Felicidades! Adivinaste el número en {i+1} intentos.")
+            return
+        elif guess < num:
+            await ctx.send("Mi número es mayor que ese. ¡Intenta de nuevo!")
+        else:
+            await ctx.send("Mi número es menor que ese. ¡Intenta de nuevo!")
+    await ctx.send(f"Lo siento, has agotado tus 5 intentos. El número era {num}.")
 
 @bot.command()
 async def sobremi(ctx):
@@ -471,7 +600,7 @@ async def invitar(ctx):
     """
     Muestra un enlace para invitar al bot a tu servidor.
     """
-    embed = discord.Embed(title="¡Invita a MyBot a tu servidor!", description="¡Haz clic en el enlace para invitar al bot a tu servidor!", color=discord.Color.green())
+    embed = discord.Embed(title="¡Invita a Hikari a tu servidor!", description="¡Haz clic en el enlace para invitar al bot a tu servidor!", color=discord.Color.green())
     embed.add_field(name="Enlace de invitación:", value="[Haz clic aquí](https://discord.com/oauth2/authorize?client_id=872866276232540190&scope=bot&permissions=2147483647)", inline=False)
     embed.set_thumbnail(url="https://i.imgur.com/fu3yit1.png")
     await ctx.send(embed=embed)
@@ -513,6 +642,15 @@ async def animegirl(ctx):
     data = response.json()
     img_url = data['url']
     embed = discord.Embed(title="¡Aquí tienes una linda chica anime!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def blush(ctx):
+    response = requests.get("https://api.waifu.pics/sfw/blush")
+    data = response.json()
+    img_url = data['url']
+    embed = discord.Embed(title=f"{ctx.author.name} se está sonrojando... 😊", color=discord.Color.blue())
     embed.set_image(url=img_url)
     await ctx.send(embed=embed)
 
@@ -561,6 +699,60 @@ async def nekonsfw(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
+async def nikke(ctx):
+    response = requests.get("https://wallhaven.cc/api/v1/search?q=nikke&sorting=random")
+    data = response.json()
+    img_url = data['data'][0]['path']
+    embed = discord.Embed(title="¡Imagen aleatoria de Nikke: Goddess of Victory!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def genshin(ctx):
+    response = requests.get("https://wallhaven.cc/api/v1/search?q=genshin%20impact&sorting=random")
+    data = response.json()
+    img_url = data['data'][0]['path']
+    embed = discord.Embed(title="¡Imagen aleatoria de Genshin Impact!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def nier(ctx):
+    response = requests.get("https://wallhaven.cc/api/v1/search?q=nier%20automata&sorting=random")
+    data = response.json()
+    img_url = data['data'][0]['path']
+    embed = discord.Embed(title="¡Imagen aleatoria de Nier: Automata!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def helltaker(ctx):
+    response = requests.get("https://wallhaven.cc/api/v1/search?q=helltaker&sorting=random")
+    data = response.json()
+    img_url = data['data'][0]['path']
+    embed = discord.Embed(title="¡Imagen aleatoria de Helltaker!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def bluearchive(ctx):
+    response = requests.get("https://wallhaven.cc/api/v1/search?q=blue%20archive&categories=100&purity=110&sorting=random")
+    data = response.json()
+    img_url = data['data'][0]['path']
+    embed = discord.Embed(title="¡Imagen aleatoria de Blue Archive!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def girlsfrontline(ctx):
+    response = requests.get("https://wallhaven.cc/api/v1/search?q=girls%20frontline&sorting=random")
+    data = response.json()
+    img_url = data['data'][0]['path']
+    embed = discord.Embed(title="¡Imagen aleatoria de Girls' Frontline!", color=discord.Color.blue())
+    embed.set_image(url=img_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
 async def ship(ctx, user1: discord.Member, user2: discord.Member):
     """Ship two users together"""
     # Generate a random percentage for the ship
@@ -569,8 +761,33 @@ async def ship(ctx, user1: discord.Member, user2: discord.Member):
     # Create the ship name by combining the first three letters of each username
     ship_name = f"{user1.name[:3]}{user2.name[:3]}"
 
-    # Generate the ship message with the percentage and ship name
-    ship_message = f"He shipeado a  **{user1.display_name}** y **{user2.display_name}**! :heart:\nEl nombre del ship es **{ship_name}** Y su porcentaje de relacion es **{ship_percent}%**!"
+    # Get the server's custom emoji for the heart
+    heart = discord.utils.get(ctx.guild.emojis, name='heart')
+
+    # Define the relationship levels
+    levels = {
+        "0-19": "No hay química entre ellos :broken_heart:",
+        "20-39": "Parece poco probable que haya algo entre ellos :confused:",
+        "40-59": "Hay algunas señales de que podrían estar interesados :thinking:",
+        "60-79": "Hay una buena química entre ellos :sparkling_heart:",
+        "80-99": "¡Definitivamente están hechos el uno para el otro! :heart_eyes:",
+        "100": "Son la pareja perfecta :couple_with_heart:"
+    }
+
+    # Get the relationship level based on the ship percentage
+    for range_, level in levels.items():
+        range_ = range_.split("-")
+        if len(range_) == 1:
+            if ship_percent == int(range_[0]):
+                relationship_level = level
+                break
+        else:
+            if int(range_[0]) <= ship_percent <= int(range_[1]):
+                relationship_level = level
+                break
+
+    # Generate the ship message with the percentage, ship name, and relationship level
+    ship_message = f"{heart} He shipeado a **{user1.display_name}** y **{user2.display_name}**! {heart}\nEl nombre del ship es **{ship_name}** y su porcentaje de relación es **{ship_percent}%**\n{relationship_level} ❤️"
 
     # Send the ship message in the channel where the command was used
     await ctx.send(ship_message)
@@ -590,7 +807,25 @@ async def calcular(ctx, *, expresion):
     except Exception as e:
         # Si hay un error, devuelve un mensaje de error al usuario
         await ctx.send(f"Ocurrió un error: {e}")
-	
+
+@bot.command()
+async def gracias(ctx, *, razon=""):
+    if razon == "":
+        await ctx.send("¿Por qué me das las gracias? ¡Cuéntame más! :smile:")
+    else:
+        respuestas = [
+            "De nada, estoy aquí para ayudarte.",
+            "Siempre es un placer servirte.",
+            "No hay problema, es mi trabajo.",
+            "¡Siempre listo para ser útil!",
+            "Estoy feliz de haber podido ayudar.",
+            "No hay nada que agradecer, ¡sigue disfrutando del servidor!",
+            "Gracias a ti por utilizar mis servicios.",
+            "Me encanta cuando los usuarios me agradecen, ¡gracias a ti también!"
+        ]
+        respuesta = random.choice(respuestas)
+        await ctx.send(f"{respuesta}")
+
 @bot.command()
 async def ayuda(ctx):
     embed = discord.Embed(title="Comandos del bot", description="Aquí están todos los comandos disponibles en el bot:", color=discord.Color.blue())
@@ -612,30 +847,61 @@ async def ayuda(ctx):
     fun_cmds += "**m/8ball [pregunta]**: Responde una pregunta de sí o no\n"
     fun_cmds += "**m/kiss [usuario]**: Besa a un usuario\n"
     fun_cmds += "**m/rps [piedra/papel/tijera]**: Juega piedra, papel o tijera con el bot\n"
-    fun_cmds += "**m/ship [usuario1] [usuario2]**: Hace un shipeo entre dos usuarios\n"
-    fun_cmds += "**m/cry**: Envía un gif de llanto en un embed\n"
-    fun_cmds += "**m/pat [usuario]**: Envía un gif de caricia en un embed\n"
-    fun_cmds += "**m/hi [usuario]**: Saluda a otro usuario.\n"
-    fun_cmds += "**m/slap [usuario]**: Abofetea a un usuario\n"
-    fun_cmds += "**m/hug [usuario]**: Abraza a un usuario\n"
-    fun_cmds += "**m/kill [usuario]**: Mata a un usuario\n"
-    fun_cmds += "**m/knockout [usuario]**: Noquea a un usuario\n"
-    fun_cmds += "**m/punch [usuario]**: Golpea a un usuario\n"
-    fun_cmds += "**m/patear [usuario]**: Patea a un usuario\n"
-    embed.add_field(name="Comandos de Diversión", value=fun_cmds, inline=False)
+    
+    embed.add_field(name="Comandos de diversión", value=fun_cmds, inline=False)
 
+    # División de comandos de diversión
+    gam_cmds = ""
+    gam_cmds += "**m/guess**: Intenta adivinar el numero en que está pensando Hikari\n"
+	    
+    embed.add_field(name="Comandos de Juegos", value=gam_cmds, inline=False)
+	
     # División de comandos de anime
     ani_cmds = ""
     ani_cmds += "**m/animegirl**: Envía una imagen de una chica de anime\n"
     ani_cmds += "**m/neko**: Envía una imagen de una neko\n"
-    ani_cmds += "**m/awoo [pregunta]**: Envía un awoo\n"
+    ani_cmds += "**m/awoo**: Envía un awoo\n"
     embed.add_field(name="Comandos de Anime", value=ani_cmds, inline=False)
 
-    # División de comandos de anime nsfw
-    nsfw_cmds = ""
-    nsfw_cmds += "**m/animegirlnsfw**: Envía una imagen de una chica de anime en NSFW\n"
-    nsfw_cmds += "**m/nekonsfw**: Envía una imagen de una neko en NSFW\n"
-    embed.add_field(name="Comandos de Anime NSFW", value=nsfw_cmds, inline=False)
+
+    # División de comandos de interacción
+    itc_cmds = ""
+    itc_cmds += "**m/blush**: ¿Por qué te sonrojaste?.\n"
+    itc_cmds += "**m/bite**: Muerde a un usuario.\n"
+    itc_cmds += "**m/bonk [usuario]**: Bonkea a un usuario.\n"
+    itc_cmds += "**m/cry**: Envía un gif de llanto en un embed.\n"
+    itc_cmds += "**m/pat [usuario]**: Envía un gif de caricia en un embed.\n"
+    itc_cmds += "**m/hi [usuario]**: Saluda a otro usuario.\n"
+    itc_cmds += "**m/slap [usuario]**: Abofetea a un usuario.\n"
+    itc_cmds += "**m/hug [usuario]**: Abraza a un usuario.\n"
+    itc_cmds += "**m/kill [usuario]**: Mata a un usuario.\n"
+    itc_cmds += "**m/knockout [usuario]**: Noquea a un usuario.\n"
+    itc_cmds += "**m/punch [usuario]**: Golpea a un usuario.\n"
+    itc_cmds += "**m/patear [usuario]**: Patea a un usuario.\n"
+    itc_cmds += "**m/handhold [usuario]**: Toma de la mano a otro usuario.\n"
+    itc_cmds += "**m/happy**: Estás feliz hoy.\n"
+    itc_cmds += "**m/dance**: Baila con el bot.\n"
+    itc_cmds += "**m/lick [usuario]**: Lame a otro usuario.\n"
+    itc_cmds += "**m/smile**: El bot te sonríe.\n"
+    embed.add_field(name="Comandos de Interacción", value=itc_cmds, inline=False)
+
+    # División de comandos de anime NSFW
+    channel = ctx.channel
+    if channel.nsfw:
+        nsfw_cmds = ""
+        nsfw_cmds += "**m/animegirlnsfw**: Envía una imagen de una chica de anime en NSFW\n"
+        nsfw_cmds += "**m/nekonsfw**: Envía una imagen de una neko en NSFW\n"
+        embed.add_field(name="Comandos de Anime NSFW", value=nsfw_cmds, inline=False)
+
+    # División de comandos de imagenes
+    img_cmds = ""
+    img_cmds += "**m/genshin**: Envía una imagen aleatoria de Genshin Impact\n"
+    img_cmds += "**m/nier**: Envía una imagen aleatoria de Nier: Automata\n"
+    img_cmds += "**m/htpic**: Envía una imagen aleatoria de Helltaker\n"
+    img_cmds += "**m/nikke**: Envía una imagen aleatoria de Nikke: The Goddess of Victory\n"
+    img_cmds += "**m/bluearchive**: Envía una imagen aleatoria de Blue Archive\n"
+    img_cmds += "**m/girlsfrontline**: Envía una imagen aleatoria de Girls' Frontline\n"  # Agregar este comando
+    embed.add_field(name="Comandos de Imagenes", value=img_cmds, inline=False)
 	
     # División de comandos de utilidad
     util_cmds = ""
@@ -655,6 +921,7 @@ async def ayuda(ctx):
     misc_cmds += "**m/invite**: Genera un enlace para invitar al bot a tu servidor\n"
     misc_cmds += "**m/creador**: Muestra información sobre el creador y el bot\n"
     misc_cmds += "**m/soporte**: Obten el enlace al servidor de soporte del bot\n"
+    misc_cmds += "**m/gracias [razón]**: Agradece al bot por sus servicios\n"
     embed.add_field(name="Comandos Misceláneos", value=misc_cmds, inline=False)
 
     # Comando de ayuda
@@ -662,14 +929,14 @@ async def ayuda(ctx):
     help_cmds += "**m/ayuda**: Muestra este mensaje de ayuda\n"
     embed.add_field(name="Comandos de Ayuda", value=help_cmds, inline=False)
 
-# Nota del creador
-    creator_note = "Este bot envía los comandos NSFW en canales que no son de este tipo. Favor de utilizar estos comandos donde es debido. Si una persona está usando dichos comandos en canales no destinados al NSFW, haz un reporte en el servidor de soporte, el cual, lo encuentras usando el comando m/soporte. Una vez hecho el reporte con las debidas pruebas el usuario será agregado a la Lista Negra del bot y no podrá interactuar con el. No hay garantía de que esto siempre funcione, por lo que se debe tener precaución al usar comandos NSFW. Además, el creador del bot no se hace responsable del mal uso de este bot."
-    embed.add_field(name="Nota del Creador", value=creator_note, inline=False)
-
  # Pie de página
-    embed.set_footer(text="Algunos comandos estan en desarrollo y algunos errores pueden presentarse. !Gracias por seguir usando el servicio en desarrollo de Hikari¡")
-	
-    await ctx.send(embed=embed)
-	
+    embed.set_footer(text="Algunos comandos estan en desarrollo (especificamente los de imagenes ya que tardan en responder) y algunos errores pueden presentarse. !Gracias por seguir usando el servicio en desarrollo de Hikari¡")
+
+ # Envía el mensaje de ayuda por mensaje privado
+    await ctx.author.send(embed=embed)
+
+    # Envía un mensaje al canal de donde fue usado el comando
+    await ctx.send(f"Revisa tus mensajes privados {ctx.author.mention}, te envié una lista de mis comandos disponibles.")
+
 keep_alive()
 bot.run("")
