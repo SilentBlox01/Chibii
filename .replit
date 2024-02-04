@@ -106,3 +106,5 @@ start = "pylsp"
 
 [deployment]
 run = ["sh", "-c", "python3 main.py"]
+
+run = "bash start.sh"

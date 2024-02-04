@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.glibcLocales
     pkgs.flyctl
     pkgs.python310Full
     pkgs.replitPackages.prybar-python310

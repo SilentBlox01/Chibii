@@ -30,6 +30,14 @@ python-versions = ">=3.7"
 frozenlist = ">=1.1.0"
 
 [[package]]
+name = "anilist"
+version = "0.9.1"
+description = "Anilist API wrapper"
+category = "main"
+optional = false
+python-versions = ">=3.10"
+
+[[package]]
 name = "argon2-cffi"
 version = "21.3.0"
 description = "The secure Argon2 password hashing algorithm."
@@ -475,7 +483,7 @@ signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
 
 [[package]]
 name = "openai"
-version = "0.27.2"
+version = "0.27.7"
 description = "Python client library for the OpenAI API"
 category = "main"
 optional = false
@@ -966,11 +974,12 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "2c3a3d427df7077923433332ede3460e79747e201a9a746901425a957c4266f1"
+content-hash = "2d1f6321bea593d33e6172e076e60f503fdbf47e17f7b4af0094672473d1f6ec"
 
 [metadata.files]
 aiohttp = []
 aiosignal = []
+anilist = []
 argon2-cffi = []
 argon2-cffi-bindings = []
 async-timeout = []
