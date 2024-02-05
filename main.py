@@ -1071,4 +1071,4 @@ async def ayuda(interaction: discord.Interaction):
     await interaction.response.send_message(embed=embed)
 
 keep_alive()
-bot.run("")
+bot.run(os.environ['TOKEN'])
